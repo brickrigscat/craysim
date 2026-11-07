@@ -1,0 +1,24 @@
+name: Acknowledge new issues
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  issues: write
+
+jobs:
+  acknowledge:
+    name: Add automatic reply
+    runs-on: ubuntu-latest
+    steps:
+      - name: Comment on new issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: |
+          gh api \
+            --method POST \
+            "repos/${REPOSITORY}/issues/${ISSUE_NUMBER}/comments" \
+            -f body="Your issue has been added to the bug list. Please wait for Whyacat to review it. Thank you for reporting it."
